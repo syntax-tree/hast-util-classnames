@@ -1,16 +1,15 @@
 {
   "name": "hast-util-classnames",
   "version": "1.0.0",
-  "description": "utility to merge class names together",
+  "description": "hast utility to merge class names together",
   "license": "MIT",
   "keywords": [
-    "unified",
-    "rehype",
-    "hast",
-    "html",
     "unist",
+    "hast",
+    "hast-util",
     "util",
     "utility",
+    "html",
     "classes",
     "classname",
     "classnames"
