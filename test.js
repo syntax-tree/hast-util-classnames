@@ -5,9 +5,9 @@ var u = require('unist-builder')
 var h = require('hastscript')
 var classnames = require('.')
 
-test('hast-util-classnames', function(t) {
+test('hast-util-classnames', function (t) {
   t.throws(
-    function() {
+    function () {
       classnames(u('comment', '?'))
     },
     /Expected element node/,
