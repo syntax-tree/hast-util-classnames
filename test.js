@@ -29,6 +29,12 @@ test('hast-util-classnames', function (t) {
   t.deepEqual(classnames(h('a'), 123), h('a.123'), 'should support a number')
 
   t.deepEqual(
+    classnames(h('a'), null, undefined, 2),
+    h('a.2'),
+    'should support (ignore) nullish values'
+  )
+
+  t.deepEqual(
     classnames(h('a'), {alpha: true, bravo: false, charlie: 1}),
     h('a.alpha.charlie'),
     'should support an object'

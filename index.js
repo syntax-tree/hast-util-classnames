@@ -1,78 +1,60 @@
 'use strict'
 
-var parse = require('space-separated-tokens').parse
+var spaceSeparatedTokens = require('space-separated-tokens')
 
 module.exports = classnames
 
 // A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
 function classnames(node) {
+  var map = Object.create(null)
+  var list = []
   var mutate = node && typeof node === 'object' && 'type' in node
-  var length
-  var index
-  var conditional
-  var props
-  var list
+  var index = -1
   var key
-  var map
-
-  if (mutate && node.type !== 'element') {
-    throw new Error('Expected element node')
-  }
-
-  length = arguments.length
-  index = mutate ? 0 : -1
-  props = mutate ? node.properties || (node.properties = {}) : {}
-  conditional = props.className
-  map = Object.create(null)
-
-  do {
-    add(map, conditional)
-    conditional = arguments[++index]
-  } while (index < length)
-
-  list = []
-
-  for (key in map) {
-    if (map[key]) {
-      list.push(key)
-    }
-  }
 
   if (mutate) {
-    props.className = list
-    return node
+    if (node.type !== 'element') throw new Error('Expected element node')
+
+    if (!node.properties) node.properties = {}
+
+    if (node.properties.className) add(map, node.properties.className)
+
+    node.properties.className = list
+
+    index++
   }
 
-  return list
+  while (++index < arguments.length) {
+    add(map, arguments[index])
+  }
+
+  for (key in map) {
+    if (map[key]) list.push(key)
+  }
+
+  return mutate ? node : list
 }
 
 function add(result, conditional) {
-  var kind = typeof conditional
-  var index
-  var length
+  var index = -1
   var key
 
-  if (kind === 'number') {
+  if (typeof conditional === 'number') {
     result[conditional] = true
-  } else if (kind === 'string') {
-    conditional = parse(conditional)
-    index = -1
-    length = conditional.length
+  } else if (typeof conditional === 'string') {
+    conditional = spaceSeparatedTokens.parse(conditional)
 
-    while (++index < length) {
+    while (++index < conditional.length) {
       result[conditional[index]] = true
     }
-  } else if (kind === 'object') {
+  } else if (conditional && typeof conditional === 'object') {
     if ('length' in conditional) {
-      index = -1
-      length = conditional.length
-
-      while (++index < length) {
+      while (++index < conditional.length) {
         add(result, conditional[index])
       }
     } else {
       for (key in conditional) {
-        result[key] = Boolean(conditional[key])
+        result[key] = conditional[key]
       }
     }
   }
