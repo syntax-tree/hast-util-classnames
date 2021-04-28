@@ -1,9 +1,7 @@
-'use strict'
-
-var test = require('tape')
-var u = require('unist-builder')
-var h = require('hastscript')
-var classnames = require('.')
+import test from 'tape'
+import {u} from 'unist-builder'
+import {h} from 'hastscript'
+import {classnames} from './index.js'
 
 test('hast-util-classnames', function (t) {
   t.throws(

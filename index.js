@@ -1,11 +1,9 @@
-'use strict'
+import {parse} from 'space-separated-tokens'
 
-var spaceSeparatedTokens = require('space-separated-tokens')
-
-module.exports = classnames
+var own = {}.hasOwnProperty
 
 // A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
-function classnames(node) {
+export function classnames(node) {
   var map = Object.create(null)
   var list = []
   var mutate = node && typeof node === 'object' && 'type' in node
@@ -42,7 +40,7 @@ function add(result, conditional) {
   if (typeof conditional === 'number') {
     result[conditional] = true
   } else if (typeof conditional === 'string') {
-    conditional = spaceSeparatedTokens.parse(conditional)
+    conditional = parse(conditional)
 
     while (++index < conditional.length) {
       result[conditional[index]] = true
@@ -54,7 +52,9 @@ function add(result, conditional) {
       }
     } else {
       for (key in conditional) {
-        result[key] = conditional[key]
+        if (own.call(conditional, key)) {
+          result[key] = conditional[key]
+        }
       }
     }
   }
