@@ -6,6 +6,7 @@ import {classnames} from './index.js'
 test('hast-util-classnames', function (t) {
   t.throws(
     function () {
+      // @ts-ignore runtime.
       classnames(u('comment', '?'))
     },
     /Expected element node/,
@@ -33,7 +34,7 @@ test('hast-util-classnames', function (t) {
   )
 
   t.deepEqual(
-    classnames(h('a'), {alpha: true, bravo: false, charlie: 1}),
+    classnames(h('a'), {alpha: true, bravo: false, charlie: true}),
     h('a.alpha.charlie'),
     'should support an object'
   )
@@ -73,7 +74,7 @@ test('hast-util-classnames', function (t) {
   )
 
   t.deepEqual(
-    classnames('alpha', ['bravo', 123], {charlie: 1}),
+    classnames('alpha', ['bravo', 123], {charlie: true}),
     ['123', 'alpha', 'bravo', 'charlie'],
     'should return a list if w/o element'
   )

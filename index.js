@@ -1,52 +1,80 @@
+/**
+ * @typedef {import('hast').Element} HastElement
+ *
+ * @typedef {string|number} ConditionalPrimitive
+ * @typedef {Object.<string, boolean>} ConditionalMap
+ * @typedef {ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap>>} Conditional
+ *
+ * @typedef {Object.<string, boolean>} ClassMap
+ *
+ */
+
 import {parse} from 'space-separated-tokens'
 
 var own = {}.hasOwnProperty
 
-// A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
-export function classnames(node) {
-  var map = Object.create(null)
-  var list = []
-  var mutate = node && typeof node === 'object' && 'type' in node
+/**
+ * A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
+ *
+ * @param {HastElement|Conditional} [node]
+ * @param {Array.<Conditional>} [conditionals]
+ */
+export function classnames(node, ...conditionals) {
   var index = -1
+  /** @type {ClassMap} */
+  var map = Object.create(null)
+  /** @type {Array.<string>} */
+  var list = []
+  /** @type {string} */
   var key
 
-  if (mutate) {
+  if (isNode(node)) {
     if (node.type !== 'element') throw new Error('Expected element node')
 
     if (!node.properties) node.properties = {}
 
-    if (node.properties.className) add(map, node.properties.className)
+    if (node.properties.className) {
+      // @ts-ignore Assume `classname` is `Array.<string>`
+      add(map, node.properties.className)
+    }
 
     node.properties.className = list
-
-    index++
+  } else {
+    conditionals.unshift(node)
   }
 
-  while (++index < arguments.length) {
-    add(map, arguments[index])
+  while (++index < conditionals.length) {
+    add(map, conditionals[index])
   }
 
   for (key in map) {
     if (map[key]) list.push(key)
   }
 
-  return mutate ? node : list
+  return isNode(node) ? node : list
 }
 
+/**
+ * @param {ClassMap} result
+ * @param {Conditional} conditional
+ */
 function add(result, conditional) {
   var index = -1
+  /** @type {string} */
   var key
+  /** @type {Array.<string>} */
+  var list
 
   if (typeof conditional === 'number') {
     result[conditional] = true
   } else if (typeof conditional === 'string') {
-    conditional = parse(conditional)
+    list = parse(conditional)
 
-    while (++index < conditional.length) {
-      result[conditional[index]] = true
+    while (++index < list.length) {
+      result[list[index]] = true
     }
   } else if (conditional && typeof conditional === 'object') {
-    if ('length' in conditional) {
+    if (Array.isArray(conditional)) {
       while (++index < conditional.length) {
         add(result, conditional[index])
       }
@@ -58,4 +86,12 @@ function add(result, conditional) {
       }
     }
   }
+}
+
+/**
+ * @param {HastElement|Conditional} [value]
+ * @returns {value is HastElement}
+ */
+function isNode(value) {
+  return value && typeof value === 'object' && 'type' in value
 }
