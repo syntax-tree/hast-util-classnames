@@ -3,9 +3,9 @@
  *
  * @typedef {string|number} ConditionalPrimitive
  * @typedef {Object.<string, boolean>} ConditionalMap
- * @typedef {ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap>>} Conditional
+ * @typedef {null|undefined|ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap>>} Conditional
  *
- * @typedef {Object.<string, boolean>} ClassMap
+ * @typedef {Record<string, boolean>} ClassMap
  */
 
 import {parse} from 'space-separated-tokens'
@@ -16,7 +16,7 @@ const own = {}.hasOwnProperty
  * A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
  *
  * @param {HastElement|Conditional} [node]
- * @param {Array.<Conditional>} [conditionals]
+ * @param {Array.<Conditional>} conditionals
  */
 export function classnames(node, ...conditionals) {
   let index = -1
@@ -33,12 +33,12 @@ export function classnames(node, ...conditionals) {
     if (!node.properties) node.properties = {}
 
     if (node.properties.className) {
-      // @ts-ignore Assume `classname` is `Array.<string>`
+      // @ts-expect-error Assume `classname` is `Array.<string>`
       add(map, node.properties.className)
     }
 
     node.properties.className = list
-  } else {
+  } else if (node) {
     conditionals.unshift(node)
   }
 
@@ -92,5 +92,5 @@ function add(result, conditional) {
  * @returns {value is HastElement}
  */
 function isNode(value) {
-  return value && typeof value === 'object' && 'type' in value
+  return Boolean(value && typeof value === 'object' && 'type' in value)
 }

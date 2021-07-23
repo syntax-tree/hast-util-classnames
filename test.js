@@ -6,7 +6,7 @@ import {classnames} from './index.js'
 test('hast-util-classnames', (t) => {
   t.throws(
     () => {
-      // @ts-ignore runtime.
+      // @ts-expect-error runtime.
       classnames(u('comment', '?'))
     },
     /Expected element node/,
