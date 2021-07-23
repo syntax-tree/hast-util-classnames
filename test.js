@@ -3,9 +3,9 @@ import {u} from 'unist-builder'
 import {h} from 'hastscript'
 import {classnames} from './index.js'
 
-test('hast-util-classnames', function (t) {
+test('hast-util-classnames', (t) => {
   t.throws(
-    function () {
+    () => {
       // @ts-ignore runtime.
       classnames(u('comment', '?'))
     },

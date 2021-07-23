@@ -6,12 +6,11 @@
  * @typedef {ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap|Array.<ConditionalPrimitive|ConditionalMap>>} Conditional
  *
  * @typedef {Object.<string, boolean>} ClassMap
- *
  */
 
 import {parse} from 'space-separated-tokens'
 
-var own = {}.hasOwnProperty
+const own = {}.hasOwnProperty
 
 /**
  * A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
@@ -20,13 +19,13 @@ var own = {}.hasOwnProperty
  * @param {Array.<Conditional>} [conditionals]
  */
 export function classnames(node, ...conditionals) {
-  var index = -1
+  let index = -1
   /** @type {ClassMap} */
-  var map = Object.create(null)
+  const map = Object.create(null)
   /** @type {Array.<string>} */
-  var list = []
+  const list = []
   /** @type {string} */
-  var key
+  let key
 
   if (isNode(node)) {
     if (node.type !== 'element') throw new Error('Expected element node')
@@ -59,11 +58,11 @@ export function classnames(node, ...conditionals) {
  * @param {Conditional} conditional
  */
 function add(result, conditional) {
-  var index = -1
+  let index = -1
   /** @type {string} */
-  var key
+  let key
   /** @type {Array.<string>} */
-  var list
+  let list
 
   if (typeof conditional === 'number') {
     result[conditional] = true

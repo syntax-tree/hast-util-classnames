@@ -29,7 +29,7 @@ import {classnames} from 'hast-util-classnames'
 
 console.log(classnames('alpha bravo', {bravo: false}, [123, 'charlie']))
 
-var node = h('p.alpha', 'Hi!')
+const node = h('p.alpha', 'Hi!')
 console.log(classnames(node, 'bravo', ['charlie', {delta: false, echo: 1}]))
 ```
 
