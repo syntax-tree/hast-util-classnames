@@ -70,9 +70,9 @@ A value that is either:
 
 *   `string` — One or more space-separated tokens (example: `alpha bravo`)
 *   `number` — Single token that is cast to string  (example: `123`)
-*   `Object.<string, boolean>` — Map where each field is a token, and each value
+*   `Record<string, boolean>` — Map where each field is a token, and each value
     turns it either on or off
-*   `Conditional[]` — List of more conditionals
+*   `Array<Conditional>` — List of more conditionals
 *   Other values are ignored
 
 ## Security
