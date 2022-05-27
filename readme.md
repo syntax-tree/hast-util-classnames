@@ -8,17 +8,56 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[**hast**][hast] utility to merge class names together.
+[hast][] utility to transform to set classes.
+
+## Contents
+
+*   [What is this?](#what-is-this)
+*   [When should I use this?](#when-should-i-use-this)
+*   [Install](#install)
+*   [Use](#use)
+*   [API](#api)
+    *   [`classnames(node, …conditionals)`](#classnamesnode-conditionals)
+    *   [`classnames(…conditionals)`](#classnamesconditionals)
+    *   [`Conditional`](#conditional)
+*   [Types](#types)
+*   [Compatibility](#compatibility)
+*   [Security](#security)
+*   [Related](#related)
+*   [Contribute](#contribute)
+*   [License](#license)
+
+## What is this?
+
+This package is a utility that takes lets you more easily set class names on
+elements.
+
+## When should I use this?
+
+You can use this package when you find that that you’re repeating yourself
+a lot when working with classes in the syntax tree.
 
 ## Install
 
-This package is [ESM only](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c):
-Node 12+ is needed to use it and it must be `import`ed instead of `require`d.
-
-[npm][]:
+This package is [ESM only][esm].
+In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-classnames
+```
+
+In Deno with [`esm.sh`][esmsh]:
+
+```js
+import {classnames} from 'https://esm.sh/hast-util-classnames@2'
+```
+
+In browsers with [`esm.sh`][esmsh]:
+
+```html
+<script type="module">
+  import {classnames} from 'https://esm.sh/hast-util-classnames@2?bundle'
+</script>
 ```
 
 ## Use
@@ -47,7 +86,7 @@ Yields:
 
 ## API
 
-This package exports the following identifiers: `classnames`.
+This package exports the identifier `classnames`.
 There is no default export.
 
 ### `classnames(node, …conditionals)`
@@ -57,7 +96,7 @@ Utility to merge classes.
 If the first argument is a node it should be an [element][].
 All [conditionals][conditional] are merged with the current class names and with
 each other, and then set on the element.
-Finally, `node` is returned.
+Finally, the given `node` is returned.
 
 ### `classnames(…conditionals)`
 
@@ -68,12 +107,25 @@ with each other, and then the resulting array is returned.
 
 A value that is either:
 
-*   `string` — One or more space-separated tokens (example: `alpha bravo`)
-*   `number` — Single token that is cast to string  (example: `123`)
-*   `Record<string, boolean>` — Map where each field is a token, and each value
+*   `string` — one or more space-separated tokens (example: `alpha bravo`)
+*   `number` — single token that is cast to string  (example: `123`)
+*   `Record<string, boolean>` — map where each field is a token, and each value
     turns it either on or off
-*   `Array<Conditional>` — List of more conditionals
-*   Other values are ignored
+*   `Array<Conditional>` — list of more conditionals
+*   other values are ignored
+
+## Types
+
+This package is fully typed with [TypeScript][].
+It exports the additional types `ConditionalPrimitive` (`string`/`number` form),
+`ConditionalMap` (object form), and `Conditional` (any form).
+
+## Compatibility
+
+Projects maintained by the unified collective are compatible with all maintained
+versions of Node.js.
+As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
 
@@ -86,18 +138,18 @@ Either do not use user input in `classnames` or use
 ## Related
 
 *   [`hastscript`](https://github.com/syntax-tree/hastscript)
-    — Create hast trees
+    — create hast trees
 *   [`hast-util-from-selector`](https://github.com/syntax-tree/hast-util-from-selector)
-    — Parse CSS selectors to hast nodes
+    — parse CSS selectors to hast nodes
 *   [`hast-util-has-property`](https://github.com/syntax-tree/hast-util-has-property)
-    — Check if a node has a property
+    — check if a node has a property
 *   [`hast-util-is-element`](https://github.com/syntax-tree/hast-util-is-element)
-    — Check if a node is a (certain) element
+    — check if a node is a (certain) element
 
 ## Contribute
 
-See [`contributing.md` in `syntax-tree/.github`][contributing] for ways to get
-started.
+See [`contributing.md`][contributing] in [`syntax-tree/.github`][health] for
+ways to get started.
 See [`support.md`][support] for ways to get help.
 
 This project has a [code of conduct][coc].
@@ -138,15 +190,23 @@ abide by its terms.
 
 [npm]: https://docs.npmjs.com/cli/install
 
+[esm]: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
+[esmsh]: https://esm.sh
+
+[typescript]: https://www.typescriptlang.org
+
 [license]: license
 
 [author]: https://wooorm.com
 
-[contributing]: https://github.com/syntax-tree/.github/blob/HEAD/contributing.md
+[health]: https://github.com/syntax-tree/.github
 
-[support]: https://github.com/syntax-tree/.github/blob/HEAD/support.md
+[contributing]: https://github.com/syntax-tree/.github/blob/main/contributing.md
 
-[coc]: https://github.com/syntax-tree/.github/blob/HEAD/code-of-conduct.md
+[support]: https://github.com/syntax-tree/.github/blob/main/support.md
+
+[coc]: https://github.com/syntax-tree/.github/blob/main/code-of-conduct.md
 
 [hast]: https://github.com/syntax-tree/hast
 
