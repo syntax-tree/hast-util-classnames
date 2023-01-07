@@ -3,8 +3,15 @@ import test from 'node:test'
 import {u} from 'unist-builder'
 import {h} from 'hastscript'
 import {classnames} from './index.js'
+import * as mod from './index.js'
 
-test('hast-util-classnames', () => {
+test('classnames', () => {
+  assert.deepEqual(
+    Object.keys(mod).sort(),
+    ['classnames'],
+    'should expose the public api'
+  )
+
   assert.throws(
     () => {
       classnames(u('comment', '?'))
