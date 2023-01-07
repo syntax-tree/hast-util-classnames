@@ -1,11 +1,20 @@
 /**
- * @typedef {import('hast').Element} HastElement
- *
- * @typedef {string|number} ConditionalPrimitive
+ * @typedef {import('hast').Root} Root
+ * @typedef {import('hast').Content} Content
+ */
+
+/**
+ * @typedef {Root | Content} Node
+ * @typedef {string | number} ConditionalPrimitive
+ *   Basic class names.
  * @typedef {Record<string, boolean>} ConditionalMap
- * @typedef {null|undefined|ConditionalPrimitive|ConditionalMap|Array<ConditionalPrimitive|ConditionalMap|Array<ConditionalPrimitive|ConditionalMap>>} Conditional
- *
+ *   Map of class names as keys, with whether they’re turned on or not as
+ *   values.
+ * @typedef {null | undefined | ConditionalPrimitive | ConditionalMap | Array<ConditionalPrimitive | ConditionalMap | Array<ConditionalPrimitive | ConditionalMap>>} Conditional
+ *   Different ways to turn class names on or off.
  * @typedef {Record<string, boolean>} ClassMap
+ *   Map of class names as keys, with whether they’re turned on or not as
+ *   values.
  */
 
 import {parse} from 'space-separated-tokens'
@@ -13,45 +22,63 @@ import {parse} from 'space-separated-tokens'
 const own = {}.hasOwnProperty
 
 /**
- * A bit inspired by <https://github.com/JedWatson/classnames>, but for hast.
+ * Merge classes.
  *
- * @param {HastElement|Conditional} [node]
- * @param {Array<Conditional>} conditionals
+ * @param node
+ *   Optionally, node whose classes to append to.
+ * @param conditionals
+ *   Class configuration to merge.
+ * @returns
+ *   The given node, if any, or a list of strings.
  */
-export function classnames(node, ...conditionals) {
-  let index = -1
-  /** @type {ClassMap} */
-  const map = Object.create(null)
-  /** @type {Array<string>} */
-  const list = []
-  /** @type {string} */
-  let key
+export const classnames =
+  /**
+   * @type {(
+   *   (<T extends Node>(node: T, ...conditions: Array<Conditional>) => T) &
+   *   ((...conditions: Array<Conditional>) => Array<string>)
+   * )}
+   */
+  (
+    /**
+     * @param {Node | Conditional | null | undefined} [node]
+     * @param {Array<Conditional>} conditionals
+     */
+    function (node, ...conditionals) {
+      let index = -1
+      /** @type {ClassMap} */
+      const map = Object.create(null)
+      /** @type {Array<string>} */
+      const list = []
 
-  if (isNode(node)) {
-    if (node.type !== 'element') throw new Error('Expected element node')
+      if (isNode(node)) {
+        if (node.type !== 'element') throw new Error('Expected element node')
 
-    if (!node.properties) node.properties = {}
+        if (!node.properties) node.properties = {}
 
-    if (node.properties.className) {
-      // @ts-expect-error Assume `classname` is `Array<string>`
-      add(map, node.properties.className)
+        if (node.properties.className) {
+          // @ts-expect-error Assume `classname` is `Array<string>`
+          add(map, node.properties.className)
+        }
+
+        node.properties.className = list
+      } else {
+        conditionals.unshift(node)
+      }
+
+      while (++index < conditionals.length) {
+        add(map, conditionals[index])
+      }
+
+      /** @type {string} */
+      let key
+
+      for (key in map) {
+        if (map[key]) list.push(key)
+      }
+
+      return isNode(node) ? node : list
     }
-
-    node.properties.className = list
-  } else if (node) {
-    conditionals.unshift(node)
-  }
-
-  while (++index < conditionals.length) {
-    add(map, conditionals[index])
-  }
-
-  for (key in map) {
-    if (map[key]) list.push(key)
-  }
-
-  return isNode(node) ? node : list
-}
+  )
 
 /**
  * @param {ClassMap} result
@@ -88,8 +115,8 @@ function add(result, conditional) {
 }
 
 /**
- * @param {HastElement|Conditional} [value]
- * @returns {value is HastElement}
+ * @param {Node | Conditional} [value]
+ * @returns {value is Node}
  */
 function isNode(value) {
   return Boolean(value && typeof value === 'object' && 'type' in value)
