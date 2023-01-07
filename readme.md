@@ -8,7 +8,7 @@
 [![Backers][backers-badge]][collective]
 [![Chat][chat-badge]][chat]
 
-[hast][] utility to transform to set classes.
+[hast][] utility to set classes.
 
 ## Contents
 
@@ -17,8 +17,9 @@
 *   [Install](#install)
 *   [Use](#use)
 *   [API](#api)
-    *   [`classnames(node, …conditionals)`](#classnamesnode-conditionals)
-    *   [`classnames(…conditionals)`](#classnamesconditionals)
+    *   [`classnames([node, ]…conditionals)`](#classnamesnode-conditionals)
+    *   [`ConditionalPrimitive`](#conditionalprimitive)
+    *   [`ConditionalMap`](#conditionalmap)
     *   [`Conditional`](#conditional)
 *   [Types](#types)
 *   [Compatibility](#compatibility)
@@ -40,7 +41,7 @@ a lot when working with classes in the syntax tree.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 12.20+, 14.14+, 16.0+, 18.0+), install with [npm][]:
+In Node.js (version 14.14+ and 16.0+), install with [npm][]:
 
 ```sh
 npm install hast-util-classnames
@@ -86,45 +87,83 @@ Yields:
 
 ## API
 
-This package exports the identifier `classnames`.
+This package exports the identifier [`classnames`][classnames].
 There is no default export.
 
-### `classnames(node, …conditionals)`
+### `classnames([node, ]…conditionals)`
 
-Utility to merge classes.
+Merge classes.
 
-If the first argument is a node it should be an [element][].
-All [conditionals][conditional] are merged with the current class names and with
-each other, and then set on the element.
-Finally, the given `node` is returned.
+This function has two signatures, depending on whether a `node` was passed.
 
-### `classnames(…conditionals)`
+###### Signatures
 
-If the first argument is not a node, all [conditionals][conditional] are merged
-with each other, and then the resulting array is returned.
+*   `(node: Node, ...conditionals: Array<Conditional>) => Node`
+*   `(...conditionals: Array<Conditional>) => Array<string>`
+
+###### Parameters
+
+*   `node` ([`Node`][node])
+    — optionally, node whose classes to append to (should be
+    [`Element`][element])
+*   `conditionals` ([`Array<Conditional>`][conditional])
+    — class configuration to merge
+
+###### Returns
+
+The given node ([`Node`][node]), if any, or a list of strings (`Array<string>`).
+
+### `ConditionalPrimitive`
+
+Basic class names (TypeScript type).
+
+###### Type
+
+```ts
+type ConditionalPrimitive = string | number
+```
+
+### `ConditionalMap`
+
+Map of class names as keys, with whether they’re turned on or not as values.
+
+###### Type
+
+```ts
+type ConditionalMap = Record<string, boolean>
+```
 
 ### `Conditional`
 
-A value that is either:
+Different ways to turn class names on or off (TypeScript type).
 
-*   `string` — one or more space-separated tokens (example: `alpha bravo`)
-*   `number` — single token that is cast to string  (example: `123`)
-*   `Record<string, boolean>` — map where each field is a token, and each value
-    turns it either on or off
-*   `Array<Conditional>` — list of more conditionals
-*   other values are ignored
+###### Type
+
+```ts
+type Conditional =
+  | null
+  | undefined
+  | ConditionalPrimitive
+  | ConditionalMap
+  | Array<
+      | ConditionalPrimitive
+      | ConditionalMap
+      | Array<ConditionalPrimitive | ConditionalMap>
+    >
+```
 
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types `ConditionalPrimitive` (`string`/`number` form),
-`ConditionalMap` (object form), and `Conditional` (any form).
+It exports the additional types [`Conditional`][conditional],
+[`ConditionalMap`][conditionalmap], and
+[`ConditionalPrimitive`][conditionalprimitive].
 
 ## Compatibility
 
 Projects maintained by the unified collective are compatible with all maintained
 versions of Node.js.
-As of now, that is Node.js 12.20+, 14.14+, 16.0+, and 18.0+.
+As of now, that is Node.js 14.14+ and 16.0+.
 Our projects sometimes work with older versions, but this is not guaranteed.
 
 ## Security
@@ -133,7 +172,7 @@ Classes are typically not harmful, however, if someone were able to inject
 classes, it could mean that user-provided content looks like official content,
 which may cause security problems due to impersonation.
 Either do not use user input in `classnames` or use
-[`hast-util-sanitize`][sanitize] to clean the tree.
+[`hast-util-sanitize`][hast-util-sanitize] to clean the tree.
 
 ## Related
 
@@ -210,8 +249,16 @@ abide by its terms.
 
 [hast]: https://github.com/syntax-tree/hast
 
+[node]: https://github.com/syntax-tree/hast#nodes
+
 [element]: https://github.com/syntax-tree/hast#element
 
-[sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+[hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
+
+[classnames]: #classnamesnode-conditionals
 
 [conditional]: #conditional
+
+[conditionalmap]: #conditionalmap
+
+[conditionalprimitive]: #conditionalprimitive
