@@ -41,7 +41,7 @@ a lot when working with classes in the syntax tree.
 ## Install
 
 This package is [ESM only][esm].
-In Node.js (version 14.14+ and 16.0+), install with [npm][]:
+In Node.js (version 16+), install with [npm][]:
 
 ```sh
 npm install hast-util-classnames
@@ -76,7 +76,7 @@ console.log(classnames(node, 'bravo', ['charlie', {delta: false, echo: 1}]))
 Yields:
 
 ```js
-['123', 'alpha', 'charlie']
+['alpha', '123', 'charlie']
 {
   type: 'element',
   tagName: 'p',
@@ -87,7 +87,7 @@ Yields:
 
 ## API
 
-This package exports the identifier [`classnames`][classnames].
+This package exports the identifier [`classnames`][api-classnames].
 There is no default export.
 
 ### `classnames([node, ]…conditionals)`
@@ -106,7 +106,7 @@ This function has two signatures, depending on whether a `node` was passed.
 *   `node` ([`Node`][node])
     — optionally, node whose classes to append to (must be
     [`Element`][element])
-*   `conditionals` ([`Array<Conditional>`][conditional])
+*   `conditionals` ([`Array<Conditional>`][api-conditional])
     — class configuration to merge
 
 ###### Returns
@@ -155,16 +155,19 @@ type Conditional =
 ## Types
 
 This package is fully typed with [TypeScript][].
-It exports the additional types [`Conditional`][conditional],
-[`ConditionalMap`][conditionalmap], and
-[`ConditionalPrimitive`][conditionalprimitive].
+It exports the additional types [`Conditional`][api-conditional],
+[`ConditionalMap`][api-conditional-map], and
+[`ConditionalPrimitive`][api-conditional-primitive].
 
 ## Compatibility
 
-Projects maintained by the unified collective are compatible with all maintained
+Projects maintained by the unified collective are compatible with maintained
 versions of Node.js.
-As of now, that is Node.js 14.14+ and 16.0+.
-Our projects sometimes work with older versions, but this is not guaranteed.
+
+When we cut a new major release, we drop support for unmaintained versions of
+Node.
+This means we try to keep the current release line, `hast-util-classnames@^2`,
+compatible with Node.js 12.
 
 ## Security
 
@@ -213,9 +216,9 @@ abide by its terms.
 
 [downloads]: https://www.npmjs.com/package/hast-util-classnames
 
-[size-badge]: https://img.shields.io/bundlephobia/minzip/hast-util-classnames.svg
+[size-badge]: https://img.shields.io/badge/dynamic/json?label=minzipped%20size&query=$.size.compressedSize&url=https://deno.bundlejs.com/?q=hast-util-classnames
 
-[size]: https://bundlephobia.com/result?p=hast-util-classnames
+[size]: https://bundlejs.com/?q=hast-util-classnames
 
 [sponsors-badge]: https://opencollective.com/unified/sponsors/badge.svg
 
@@ -255,10 +258,10 @@ abide by its terms.
 
 [hast-util-sanitize]: https://github.com/syntax-tree/hast-util-sanitize
 
-[classnames]: #classnamesnode-conditionals
+[api-classnames]: #classnamesnode-conditionals
 
-[conditional]: #conditional
+[api-conditional]: #conditional
 
-[conditionalmap]: #conditionalmap
+[api-conditional-map]: #conditionalmap
 
-[conditionalprimitive]: #conditionalprimitive
+[api-conditional-primitive]: #conditionalprimitive
