@@ -104,7 +104,7 @@ This function has two signatures, depending on whether a `node` was passed.
 ###### Parameters
 
 *   `node` ([`Node`][node])
-    — optionally, node whose classes to append to (should be
+    — optionally, node whose classes to append to (must be
     [`Element`][element])
 *   `conditionals` ([`Array<Conditional>`][conditional])
     — class configuration to merge
@@ -120,7 +120,7 @@ Basic class names (TypeScript type).
 ###### Type
 
 ```ts
-type ConditionalPrimitive = string | number
+type ConditionalPrimitive = number | string
 ```
 
 ### `ConditionalMap`
@@ -141,15 +141,15 @@ Different ways to turn class names on or off (TypeScript type).
 
 ```ts
 type Conditional =
+  | Array<
+      | Array<ConditionalPrimitive | ConditionalMap>
+      | ConditionalMap
+      | ConditionalPrimitive
+    >
+  | ConditionalMap
+  | ConditionalPrimitive
   | null
   | undefined
-  | ConditionalPrimitive
-  | ConditionalMap
-  | Array<
-      | ConditionalPrimitive
-      | ConditionalMap
-      | Array<ConditionalPrimitive | ConditionalMap>
-    >
 ```
 
 ## Types
