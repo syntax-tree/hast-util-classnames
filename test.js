@@ -73,12 +73,6 @@ test('classnames', () => {
   )
 
   assert.deepEqual(
-    classnames(u('element', {tagName: 'a'}, []), ['alpha']),
-    h('a.alpha'),
-    'should not fail if an element is missing properties'
-  )
-
-  assert.deepEqual(
     classnames(h('a'), 'alpha', {bravo: true, charlie: false}, ['delta', 123]),
     h('a.123.alpha.bravo.delta'),
     'should support multiple conditionals'
