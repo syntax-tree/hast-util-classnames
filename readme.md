@@ -50,14 +50,14 @@ npm install hast-util-classnames
 In Deno with [`esm.sh`][esmsh]:
 
 ```js
-import {classnames} from 'https://esm.sh/hast-util-classnames@2'
+import {classnames} from 'https://esm.sh/hast-util-classnames@3'
 ```
 
 In browsers with [`esm.sh`][esmsh]:
 
 ```html
 <script type="module">
-  import {classnames} from 'https://esm.sh/hast-util-classnames@2?bundle'
+  import {classnames} from 'https://esm.sh/hast-util-classnames@3?bundle'
 </script>
 ```
 
